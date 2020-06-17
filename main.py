@@ -26,27 +26,29 @@ api = tweepy.API(auth)
 def twSearch(search):
     polarity = []
     subjectivity = []
+    tweetArr = []
 
     query = search
     public_tweets = tweepy.Cursor(api.search, q=query, rpp=100, count=200, result_type="recent", include_entities=True, lang="en").items(5) # set to 200
     
     #TODO Possibly also filter other params ex. lang/geo ==> feed into tkinter gui and plot the graph through seaborn/matplot?
     for i in public_tweets:
+        tweetArr.append(i.text)
         analysis = TextBlob(i.text)
         polar = analysis.sentiment
         polarity.append(float(polar.polarity))
         subject = analysis.sentiment
         subjectivity.append(float(subject.subjectivity))
         
-    twAnalysis = ("polarity::  \n" + str(polarity) + "\n\nsubjectivity::  \n" + str(subjectivity) + "\n\n" + i.text)
+    twAnalysis = ("polarity::  \n" + str(polarity) + "\n\nsubjectivity::  \n" + str(subjectivity) + "\n\n" + str(tweetArr)) #TODO stop overflow on tweets. 
     tweets = tk.Label(root, text = twAnalysis)
-    canvas1.create_window(200,480,window=tweets)
+    canvas1.create_window(200,500,window=tweets)
 root= tk.Tk()
-
 canvas1 = tk.Canvas(root, width = 600, height = 800)
 canvas1.pack()
-
 entry1 = tk.Entry (root) 
+entry1.insert(0, "Stanford")
+
 canvas1.create_window(200, 400, window=entry1)
 
 def query():  
